@@ -1,1 +1,21 @@
-First function is now unavailable
+#include <linux/init.h> /* Needed for the macros */
+#include <linux/module.h> /* Needed for all modules */
+MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_AUTHOR("fudan_abc");
+
+ static int __init test_init(void)
+{
+ printk(KERN_ALERT "Test succeed!\n");//This will be published when insmod
+ return 0;
+ }
+
+ static void __exit test_exit(void)
+ {
+
+ printk(KERN_ALERT "Test terminate\n");//This will be published when rmmod
+
+ }
+
+ module_init(test_init);
+ module_exit(test_exit);
+
