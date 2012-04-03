@@ -1,21 +1,30 @@
-#include <linux/init.h> /* Needed for the macros */
-#include <linux/module.h> /* Needed for all modules */
-MODULE_LICENSE("Dual BSD/GPL");
- MODULE_AUTHOR("fudan_abc");
+# To build modules outside of the kernel tree, we run "make"
+# in the kernel source tree; the Makefile these then includes this
+# Makefile once again.
+# This conditional selects whether we are being included from the
+# kernel Makefile or not.
+ ifeq ($(KERNELRELEASE),)
 
- static int __init test_init(void)
-{
- printk(KERN_ALERT "Test succeed!\n");//This will be published when insmod
- return 0;
- }
+ # Assume the source tree is where the running kernel was built
+ # You should set KERNELDIR in the environment if it's elsewhere
+ KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+ # The current directory is passed to sub-makes as argument
+ PWD := $(shell pwd)
+ modules:
 
- static void __exit test_exit(void)
- {
+$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
+ modules_install:
 
- printk(KERN_ALERT "Test terminate\n");//This will be published when rmmod
+$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
 
- }
+ clean:
 
- module_init(test_init);
- module_exit(test_exit);
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions
+
+ .PHONY: modules modules_install clean
+
+ else
+# called from kernel build system: just declare what our modules are
+obj-m := test.o
+endif
 
