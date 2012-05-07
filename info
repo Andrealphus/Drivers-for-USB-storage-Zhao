@@ -1,0 +1,8 @@
+Bus=02 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 4 Spd=480 MxCh=0
+Ver=2.00 Cls=00(>ifc) Sub=00 Prot=00 MxPS=64 #Cfgs= 1
+Vendor=0951 ProdID=1624 Rev=1.00
+Manufacturer=Kingston
+Product=DataTraveler G2
+SerialNumber=001CC0EC32F6EA412000000E
+#Ifs= 1 Cfg#= 1 Atr=80 MxPwr=200mA
+If#= 0 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot =50 Driver=usb-storage
