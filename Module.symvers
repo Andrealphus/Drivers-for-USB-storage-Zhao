@@ -1,0 +1,5 @@
+0xb57f6483	our_pre_reset	/home/bcxc/proc++/ourusb	EXPORT_SYMBOL_GPL
+0x8a8ea10b	our_reset_resume	/home/bcxc/proc++/ourusb	EXPORT_SYMBOL_GPL
+0xf7eb2e7d	our_suspend	/home/bcxc/proc++/ourusb	EXPORT_SYMBOL_GPL
+0xf20855a0	our_post_reset	/home/bcxc/proc++/ourusb	EXPORT_SYMBOL_GPL
+0xe42042fa	our_resume	/home/bcxc/proc++/ourusb	EXPORT_SYMBOL_GPL
