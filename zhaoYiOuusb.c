@@ -30,7 +30,8 @@ static void quiesce_and_remove_host(struct us_data *us)
 	struct Scsi_Host *host = us_to_host(us);
 	//Prevent SCSI-scanning
 	cancel_delayed_work_sync(&us->scan_dwork);
-	scsi_remove_host(host);
+	
+        scsi_remove_host(host);
 	/*阻止任何对USB的命令*/
 	scsi_lock(host);
 	set_bit(US_FLIDX_DISCONNECTING, &us->dflags);
@@ -69,6 +70,57 @@ static void usb_stor_release_resources(struct us_data *us)
 
 	usb_free_urb(us->current_urb);
 }
+void usb_stor_release_resources(struct us_data *us)
+ {
+
+US_DEBUGP("-- %s\n", __FUNCTION__);
+if (us->pid) {
+down(&us->dev_semaphore);
+US_DEBUGP("-- sending exit command to thread\n");
+
+ scsi_lock(us->host);
+us->srb = NULL;
+scsi_unlock(us->host);
+up(&us->dev_semaphore);
+up(&us->sema);
+wait_for_completion(&us->notify);
+
+}
+
+
+if (us->extra_destructor) {
+US_DEBUGP("-- calling extra_destructor()\n");
+ us->extra_destructor(us->extra);
+
+}
+
+ if (us->host)
+
+scsi_host_put(us->host);
+
+if (us->extra)
+
+kfree(us->extra);
+if (us->current_urb)
+usb_free_urb(us->current_urb);
+
+ }
+
+ static void dissociate_dev(struct us_data *us)
+ {
+
+US_DEBUGP("-- %s\n", __FUNCTION__);
+
+ if (us->cr)
+    usb_buffer_free(us->pusb_dev, sizeof(*us->cr), us->cr,us->cr_dma);
+if (us->iobuf)
+    usb_buffer_free(us->pusb_dev, US_IOBUF_SIZE, us->iobuf,us->iobuf_dma);
+
+
+ usb_set_intfdata(us->pusb_intf, NULL);
+
+ kfree(us);
+ }
 
 module_init(usb_stor_init);
 module_exit(usb_stor_exit);
